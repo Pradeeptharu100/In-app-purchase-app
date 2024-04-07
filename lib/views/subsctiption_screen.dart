@@ -17,13 +17,18 @@ class _SubscriptionScreenState extends State<SubscriptionScreen> {
   //List products
   late final List<ProductDetails> _products = [];
   bool isSubscribed = false;
+  bool isRestore = false;
 
   //List of productId
   final List<ProductId> _productIds = [
     ProductId(id: 'weekly', isConsumable: false),
     ProductId(id: 'rc_premium_month', isConsumable: false),
     ProductId(id: 'rc_premium_year', isConsumable: false),
+    ProductId(id: 'non_auto_renewable1', isConsumable: false),
+    ProductId(id: 'normal_subscription', isConsumable: false),
   ];
+  bool subExisting = false;
+  late PurchaseDetails oldPurchaseDetail;
 
   //IApEngine
   final IApEngine iApEngine = IApEngine();
@@ -33,9 +38,49 @@ class _SubscriptionScreenState extends State<SubscriptionScreen> {
   void initState() {
     super.initState();
     getProducts();
+    isSubscribed = OnePref.getPremium()!;
 
-    iApEngine.inAppPurchase.purchaseStream.listen((listenOfPurchaseDetails) {
-      listenPurchases(listenOfPurchaseDetails);
+    // iApEngine.inAppPurchase.purchaseStream.listen((listenOfPurchaseDetails) {
+    // listenPurchases(listenOfPurchaseDetails);
+    // });
+
+    iApEngine.inAppPurchase.purchaseStream.listen((purchaseDetailList) {
+      listenPurchases(purchaseDetailList);
+      log('message : $purchaseDetailList');
+
+      if (purchaseDetailList.isNotEmpty) {
+        setState(() {
+          subExisting = true;
+          oldPurchaseDetail = purchaseDetailList[0];
+        });
+      }
+
+      if (purchaseDetailList.isEmpty && isRestore) {
+        WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+          openSnackBar(
+            context: context,
+            btnName: 'OK',
+            title: 'Restore',
+            message: 'Oops!,You do not have a subscription to restore',
+            color: Colors.yellow,
+            bgColor: Colors.white,
+          );
+        });
+      } else if (purchaseDetailList.isNotEmpty && isRestore) {
+        openSnackBar(
+          context: context,
+          btnName: 'OK',
+          title: 'Restore',
+          message:
+              'Congrats!,You got a purchase restore, it will be restored in a sec',
+          color: Colors.yellow,
+          bgColor: Colors.white,
+        );
+      }
+    }, onDone: () {
+      log('Done');
+    }, onError: (error) {
+      log('Error  :$error');
     });
   }
 
@@ -152,8 +197,35 @@ class _SubscriptionScreenState extends State<SubscriptionScreen> {
                 itemBuilder: (context, index) {
                   final data = _products[index];
                   return InkWell(
-                    onTap: () {
-                      iApEngine.handlePurchase(_products[index], _productIds);
+                    onTap: () async {
+                      setState(() {
+                        isRestore = false;
+                      });
+                      await iApEngine.inAppPurchase
+                          .restorePurchases()
+                          .whenComplete(() async =>
+                              await Future.delayed(const Duration(seconds: 1))
+                                  .then((value) async => {
+                                        if (subExisting &&
+                                            oldPurchaseDetail.productID !=
+                                                _products[index].id)
+                                          {
+                                            await iApEngine
+                                                .upgradeOrDowngradeSubscription(
+                                                    oldPurchaseDetail,
+                                                    _products[index])
+                                                .then((value) => {
+                                                      setState(() {
+                                                        isRestore = false;
+                                                      })
+                                                    }),
+                                          }
+                                        else
+                                          {
+                                            iApEngine.handlePurchase(
+                                                _products[index], _productIds),
+                                          }
+                                      }));
                     },
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -184,6 +256,49 @@ class _SubscriptionScreenState extends State<SubscriptionScreen> {
           ),
         ),
       ),
+    );
+  }
+
+  void openSnackBar({
+    required BuildContext context,
+    required String btnName,
+    required String title,
+    required String message,
+    required Color color,
+    required Color bgColor,
+  }) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text(
+            title,
+            style: TextStyle(
+              color: color,
+            ),
+          ),
+          content: Text(
+            message,
+            style: TextStyle(
+              color: color,
+            ),
+          ),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: Text(
+                btnName,
+                style: TextStyle(
+                  color: color,
+                ),
+              ),
+            ),
+          ],
+          backgroundColor: bgColor,
+        );
+      },
     );
   }
 }
