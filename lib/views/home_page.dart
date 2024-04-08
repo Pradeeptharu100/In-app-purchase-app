@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:onepref/onepref.dart';
 import 'package:revenue_cat_in_app_purchase/views/buy_coins.dart';
-import 'package:revenue_cat_in_app_purchase/views/subsctiption_screen.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
@@ -35,7 +34,7 @@ class HomePage extends StatelessWidget {
                   Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => const SubscriptionScreen(),
+                        builder: (context) => const BuyCoins(),
                       ));
                 },
                 child: const Text('Subscription'))

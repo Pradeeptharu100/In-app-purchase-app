@@ -5,7 +5,6 @@ import 'package:in_app_purchase/in_app_purchase.dart';
 import 'package:in_app_purchase_android/in_app_purchase_android.dart';
 import 'package:onepref/onepref.dart';
 import 'package:revenue_cat_in_app_purchase/main.dart';
-import 'package:revenue_cat_in_app_purchase/views/subsctiption_screen.dart';
 
 class BuyCoins extends StatefulWidget {
   const BuyCoins({super.key});
@@ -73,7 +72,7 @@ class _BuyCoinsState extends State<BuyCoins> {
                   Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => const SubscriptionScreen(),
+                        builder: (context) => const BuyCoins(),
                       ));
                 },
                 child: const Text('Go to subscription screen')),
