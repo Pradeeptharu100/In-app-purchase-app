@@ -2,7 +2,7 @@
    <uses-permission android:name="com.android.vending.BILLING" />
 
     <application
-        android:label="revenue_cat_in_app_purchase"
+        android:label="Buy me"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity

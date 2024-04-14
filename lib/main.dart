@@ -27,50 +27,6 @@ final List<ProductId> _storeProductId = [
 ];
 IApEngine iApEngine = IApEngine();
 
-// void main() async {
-//   if (Platform.isIOS || Platform.isMacOS) {
-//     StoreConfig(
-//       store: Store.appStore,
-//       apiKey: appleApiKey,
-//     );
-//   } else if (Platform.isAndroid) {
-//     // Run the app passing --dart-define=AMAZON=true
-//     StoreConfig(
-//       store: Store.playStore,
-//       apiKey: googleApiKey,
-//     );
-//   }
-
-//   WidgetsFlutterBinding.ensureInitialized();
-//   await OnePref.init();
-
-//   await _configureSDK();
-
-//   runApp(const MagicWeatherFlutter());
-// }
-
-// Future<void> _configureSDK() async {
-//   // Enable debug logs before calling `configure`.
-//   await Purchases.setLogLevel(LogLevel.debug);
-
-//   /*
-//     - appUserID is nil, so an anonymous ID will be generated automatically by the Purchases SDK. Read more about Identifying Users here: https://docs.revenuecat.com/docs/user-ids
-
-//     - observerMode is false, so Purchases will automatically handle finishing transactions. Read more about Observer Mode here: https://docs.revenuecat.com/docs/observer-mode
-//     */
-//   PurchasesConfiguration configuration;
-//   if (StoreConfig.isForAmazonAppstore()) {
-//     configuration = AmazonConfiguration(StoreConfig.instance.apiKey)
-//       ..appUserID = null
-//       ..observerMode = false;
-//   } else {
-//     configuration = PurchasesConfiguration(StoreConfig.instance.apiKey)
-//       ..appUserID = null
-//       ..observerMode = false;
-//   }
-//   await Purchases.configure(configuration);
-// }
-
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await OnePref.init();

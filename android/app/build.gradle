@@ -55,6 +55,10 @@ android {
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName
         multiDexEnabled true
+        ndkVersion "23.1.7779620"
+        ndk {
+        debugSymbolLevel 'FULL'
+    }
 
     }
 
