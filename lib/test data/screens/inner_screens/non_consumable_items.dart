@@ -1,12 +1,10 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-
 // ignore: depend_on_referenced_packages
 import 'package:in_app_purchase/in_app_purchase.dart';
 // ignore: depend_on_referenced_packages
 import 'package:in_app_purchase_android/in_app_purchase_android.dart';
-
 import 'package:onepref/onepref.dart';
 import 'package:revenue_cat_in_app_purchase/main.dart';
 import 'package:revenue_cat_in_app_purchase/test%20data/components/snackbar.dart';
@@ -112,10 +110,10 @@ class _NonConsumableState extends State<NonConsumable> {
                 iApEngine.inAppPurchase.getPlatformAddition<
                     InAppPurchaseAndroidPlatformAddition>();
             await androidPlatformAddition.consumePurchase(purchaseDetails).then(
-                  (value) => setState(() => {
-                        OnePref.setRemoveAds(true),
-                        adsRemoved = OnePref.getRemoveAds() ?? false,
-                      }),
+                  (value) => setState(() {
+                    OnePref.setRemoveAds(true);
+                    adsRemoved = OnePref.getRemoveAds() ?? false;
+                  }),
                 );
           }
 
@@ -124,10 +122,10 @@ class _NonConsumableState extends State<NonConsumable> {
             await iApEngine.inAppPurchase
                 .completePurchase(purchaseDetails)
                 .then(
-                  (value) => setState(() => {
-                        OnePref.setRemoveAds(true),
-                        adsRemoved = OnePref.getRemoveAds() ?? false,
-                      }),
+                  (value) => setState(() {
+                    OnePref.setRemoveAds(true);
+                    adsRemoved = OnePref.getRemoveAds() ?? false;
+                  }),
                 );
           }
         }

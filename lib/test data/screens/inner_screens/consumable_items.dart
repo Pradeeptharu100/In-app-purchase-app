@@ -3,7 +3,6 @@
 
 import 'dart:developer';
 import 'dart:io';
-
 import 'package:flutter/material.dart';
 // ignore: depend_on_referenced_packages
 import 'package:in_app_purchase/in_app_purchase.dart';
@@ -11,7 +10,6 @@ import 'package:onepref/onepref.dart';
 // ignore: depend_on_referenced_packages
 import 'package:in_app_purchase_android/in_app_purchase_android.dart';
 import 'package:revenue_cat_in_app_purchase/main.dart';
-
 import '../../utils/constants.dart';
 
 class ConsumableItems extends StatefulWidget {
@@ -36,6 +34,7 @@ class _ConsumableItemsState extends State<ConsumableItems> {
     ProductId(id: "coins_10", isConsumable: true, reward: 10),
     ProductId(id: "coins_100", isConsumable: true, reward: 100),
     ProductId(id: "100_coins", isConsumable: true, reward: 1000),
+    ProductId(id: "buy_coin500", isConsumable: true, reward: 1000),
   ];
 
   @override
@@ -48,7 +47,9 @@ class _ConsumableItemsState extends State<ConsumableItems> {
         (List<PurchaseDetails> purchaseDetailsList) {
       //listen to the purchases
       listenToPurchaseUpdated(purchaseDetailsList);
-    }, onDone: () {}, onError: (Object error) {});
+    }, onDone: () {
+      log('Payment Success ');
+    }, onError: (Object error) {});
     getProducts();
   }
 
@@ -116,13 +117,19 @@ class _ConsumableItemsState extends State<ConsumableItems> {
           OnePref.setInt(Constants.rewardKey, reward);
           _purchasePending = false;
         });
+
+        // Send the desired data
+        log('Data: {'
+            '\n  "source": ${purchaseDetails.verificationData.source},'
+            '\n  "productId": ${purchaseDetails.productID},'
+            '\n  "verificationData": ${purchaseDetails.verificationData.serverVerificationData}'
+            '\n}');
       }
     }
   }
 
   @override
   Widget build(BuildContext context) => Builder(builder: (context) {
-        log('data : $_products');
         return Scaffold(
           body: SafeArea(
               child: Container(

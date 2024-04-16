@@ -139,13 +139,18 @@ class _SubscriptionsState extends State<Subscriptions> {
                 iApEngine.inAppPurchase.getPlatformAddition<
                     InAppPurchaseAndroidPlatformAddition>();
 
-            //
-            //
             await androidPlatformAddition.consumePurchase(purchaseDetails).then(
-                  (value) => setState(() => {
-                        OnePref.setPremium(true),
-                        isSubscribed = OnePref.getPremium() ?? false,
-                      }),
+                  (value) => setState(() {
+                    OnePref.setPremium(true);
+                    isSubscribed = OnePref.getPremium() ?? false;
+                    print('Subscription success details:');
+                    print({
+                      'source': purchaseDetails.verificationData.source,
+                      'productId': purchaseDetails.productID,
+                      'verificationData': purchaseDetails
+                          .verificationData.serverVerificationData
+                    });
+                  }),
                 );
           }
 
@@ -154,10 +159,14 @@ class _SubscriptionsState extends State<Subscriptions> {
             await iApEngine.inAppPurchase
                 .completePurchase(purchaseDetails)
                 .then(
-                  (value) => setState(() => {
-                        OnePref.setPremium(true),
-                        isSubscribed = OnePref.getPremium() ?? false,
-                      }),
+                  (value) => setState(() {
+                    OnePref.setPremium(true);
+                    isSubscribed = OnePref.getPremium() ?? false;
+                    log('Subscription success details:');
+                    log('ProductId: ${purchaseDetails.productID}');
+                    log('Source: ${purchaseDetails.verificationData.source}');
+                    log('verification Data: ${purchaseDetails.verificationData.serverVerificationData}');
+                  }),
                 );
           }
         }
