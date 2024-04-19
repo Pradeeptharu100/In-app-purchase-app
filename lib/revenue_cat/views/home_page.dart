@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:onepref/onepref.dart';
-import 'package:revenue_cat_in_app_purchase/views/buy_coins.dart';
+import 'package:revenue_cat_in_app_purchase/revenue_cat/views/buy_coins.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({super.key});

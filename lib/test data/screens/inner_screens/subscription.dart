@@ -7,7 +7,6 @@ import 'package:in_app_purchase/in_app_purchase.dart';
 // ignore: depend_on_referenced_packages
 import 'package:in_app_purchase_android/in_app_purchase_android.dart';
 import 'package:onepref/onepref.dart';
-import 'package:revenue_cat_in_app_purchase/main.dart';
 import 'package:revenue_cat_in_app_purchase/test%20data/utils/constants.dart';
 
 import '../../components/snackbar.dart';
@@ -26,13 +25,8 @@ class _SubscriptionsState extends State<Subscriptions> {
   bool isRestore = false;
 
   final List<ProductId> _productsIds = [
-    ProductId(id: "non_auto_renewable1", isConsumable: false),
-    ProductId(id: "normal_subscription", isConsumable: false),
-    ProductId(id: "rc_premium_month", isConsumable: false),
-    ProductId(id: "rc_premium_year", isConsumable: false),
-    ProductId(id: "rc_test_99", isConsumable: false),
-    ProductId(id: "rc_test_trail", isConsumable: false),
-    ProductId(id: "weekly", isConsumable: false),
+    ProductId(id: "demo12", isConsumable: false),
+    ProductId(id: "check_free_subscription", isConsumable: false),
   ];
   void getExistingSubscriptionPackages(List<PurchaseDetails> purchases) {
     final existingPackages = purchases
@@ -41,11 +35,16 @@ class _SubscriptionsState extends State<Subscriptions> {
             purchase.status == PurchaseStatus.restored)
         .map((purchase) => purchase.productID)
         .toList();
-
     log('Existing subscription packages: $existingPackages');
-  }
+    log('Purchase List : $purchases');
 
-  final bool _isLoaded = false;
+    // Check if user has an existing subscription
+    if (existingPackages.isNotEmpty) {
+      setState(() {
+        isSubscribed = true;
+      });
+    }
+  }
 
   bool subExisting = false;
 
@@ -180,216 +179,227 @@ class _SubscriptionsState extends State<Subscriptions> {
   }
 
   @override
-  Widget build(BuildContext context) => Scaffold(
-        body: SafeArea(
-          child: Container(
-            decoration: const BoxDecoration(
-              color: Colors.black,
-              image: DecorationImage(
-                image: AssetImage('assets/images/coins_bg.jpeg'),
-                fit: BoxFit.cover,
-                opacity: 0.7,
+  Widget build(BuildContext context) => Builder(builder: (context) {
+        return Scaffold(
+          body: SafeArea(
+            child: Container(
+              decoration: const BoxDecoration(
+                color: Colors.black,
+                image: DecorationImage(
+                  image: AssetImage('assets/images/coins_bg.jpeg'),
+                  fit: BoxFit.cover,
+                  opacity: 0.7,
+                ),
               ),
-            ),
-            child: Column(
-              children: [
-                Padding(
-                  padding:
-                      const EdgeInsets.symmetric(vertical: 20, horizontal: 20),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      OnClickAnimation(
-                          onTap: () => {
-                                Navigator.of(context).pushAndRemoveUntil(
-                                    MaterialPageRoute(
-                                        builder: (context) =>
-                                            const MyHomePage()),
-                                    (Route<dynamic> route) => false)
+              child: Column(
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.symmetric(
+                        vertical: 20, horizontal: 20),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        OnClickAnimation(
+                            onTap: () => {
+                                  // Navigator.of(context).pushAndRemoveUntil(
+                                  //     MaterialPageRoute(
+                                  //         builder: (context) =>
+                                  //             const MyHomePage()),
+                                  //     (Route<dynamic> route) => false)
+
+                                  // TODO
+                                },
+                            child: const Text(
+                              "Dismiss",
+                              style: TextStyle(
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.bold),
+                            )),
+                        OnClickAnimation(
+                          onTap: () async => {
+                            await InAppPurchase.instance
+                                .restorePurchases()
+                                .then(
+                              (value) {
+                                isRestore = true;
+                                _products.clear();
+                                getProducts();
                               },
+                            ),
+                          },
                           child: const Text(
-                            "Dismiss",
+                            "Restore",
                             style: TextStyle(
                                 color: Colors.white,
                                 fontWeight: FontWeight.bold),
-                          )),
-                      OnClickAnimation(
-                        onTap: () async => {
-                          await InAppPurchase.instance.restorePurchases().then(
-                            (value) {
-                              isRestore = true;
-                              _products.clear();
-                              getProducts();
-                            },
                           ),
-                        },
-                        child: const Text(
-                          "Restore",
-                          style: TextStyle(
-                              color: Colors.white, fontWeight: FontWeight.bold),
                         ),
-                      ),
-                    ],
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(
-                      horizontal: 50.0, vertical: 25.0),
-                  child: Row(
-                    children: [
-                      Expanded(
-                        child: Row(
-                          children: [
-                            const Text(
-                              "${Constants.appName} Go ",
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 30,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                            Container(
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(10),
-                                color:
-                                    isSubscribed ? Colors.green : Colors.orange,
-                              ),
-                              child: const Padding(
-                                padding: EdgeInsets.all(8.0),
-                                child: Text(
-                                  "PRO",
-                                  style: TextStyle(color: Colors.white),
-                                ),
-                              ),
-                            )
-                          ],
-                        ),
-                      )
-                    ],
-                  ),
-                ),
-                SizedBox(
-                  height: 120,
-                  child: ListView.builder(
-                    itemCount: Constants.benefits.length,
-                    itemBuilder: (context, index) => Benefit(
-                      title: Constants.benefits[index],
-                      icon: Icons.check,
-                      iconBackgroundColor: Colors.orange,
-                      iconColor: Colors.white,
-                      titleStyle: const TextStyle(color: Colors.white),
+                      ],
                     ),
                   ),
-                ),
-                Visibility(
-                  visible: !_products.isNotEmpty,
-                  child: const SizedBox(
-                    height: 90,
-                    width: 90,
-                    child: CircularProgressIndicator(),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 50.0, vertical: 25.0),
+                    child: Row(
+                      children: [
+                        Expanded(
+                          child: Row(
+                            children: [
+                              const Text(
+                                "${Constants.appName} Go ",
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 25,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                              Container(
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(10),
+                                  color: isSubscribed
+                                      ? Colors.green
+                                      : Colors.orange,
+                                ),
+                                child: const Padding(
+                                  padding: EdgeInsets.all(8.0),
+                                  child: Text(
+                                    "PRO",
+                                    style: TextStyle(color: Colors.white),
+                                  ),
+                                ),
+                              )
+                            ],
+                          ),
+                        )
+                      ],
+                    ),
                   ),
-                ),
-                Expanded(
-                  child: Visibility(
-                    visible: _products.isNotEmpty,
+                  SizedBox(
+                    height: 120,
                     child: ListView.builder(
-                      itemBuilder: ((context, index) => Padding(
-                            padding: const EdgeInsets.symmetric(
-                                vertical: 5.0, horizontal: 25.0),
-                            child: Row(
-                              children: [
-                                Expanded(
-                                  child: Container(
-                                      decoration: BoxDecoration(
-                                        border: Border.all(
-                                          color: Colors.orange,
-                                          width: 0.5,
-                                        ),
-                                      ),
-                                      child: Padding(
-                                          padding: const EdgeInsets.symmetric(
-                                            horizontal: 15.0,
+                      itemCount: Constants.benefits.length,
+                      itemBuilder: (context, index) => Benefit(
+                        title: Constants.benefits[index],
+                        icon: Icons.check,
+                        iconBackgroundColor: Colors.orange,
+                        iconColor: Colors.white,
+                        titleStyle: const TextStyle(color: Colors.white),
+                      ),
+                    ),
+                  ),
+                  Visibility(
+                    visible: !_products.isNotEmpty,
+                    child: const SizedBox(
+                      height: 90,
+                      width: 90,
+                      child: CircularProgressIndicator(),
+                    ),
+                  ),
+                  Expanded(
+                    child: Visibility(
+                      visible: _products.isNotEmpty,
+                      child: ListView.builder(
+                        itemBuilder: ((context, index) => Padding(
+                              padding: const EdgeInsets.symmetric(
+                                  vertical: 5.0, horizontal: 25.0),
+                              child: Row(
+                                children: [
+                                  Expanded(
+                                    child: Container(
+                                        decoration: BoxDecoration(
+                                          border: Border.all(
+                                            color: Colors.orange,
+                                            width: 0.5,
                                           ),
-                                          child: ListTile(
-                                            title: Text(
-                                              _products[index].price,
-                                              style: const TextStyle(
-                                                color: Colors.white,
-                                              ),
+                                        ),
+                                        child: Padding(
+                                            padding: const EdgeInsets.symmetric(
+                                              horizontal: 15.0,
                                             ),
-                                            subtitle: Text(
-                                              _products[index].title,
-                                              style: const TextStyle(
-                                                color: Colors.white,
-                                              ),
-                                            ),
-                                            trailing: OnClickAnimation(
-                                              onTap: () async {
-                                                log('message :${_products[index].runtimeType}');
-                                                setState(() {
-                                                  isRestore = false;
-                                                });
-
-                                                await iApEngine.inAppPurchase
-                                                    .restorePurchases()
-                                                    .whenComplete(() async {
-                                                  await Future.delayed(
-                                                          const Duration(
-                                                              seconds: 1))
-                                                      .then((value) async {
-                                                    if (subExisting &&
-                                                        oldPurchaseDetails
-                                                                .productID !=
-                                                            _products[index]
-                                                                .id) {
-                                                      await iApEngine
-                                                          .upgradeOrDowngradeSubscription(
-                                                              oldPurchaseDetails,
-                                                              _products[index])
-                                                          .then((value) {
-                                                        setState(() {
-                                                          subExisting = false;
-                                                        });
-                                                      });
-                                                    } else {
-                                                      iApEngine.handlePurchase(
-                                                          _products[index],
-                                                          _productsIds);
-                                                    }
-                                                  });
-                                                });
-                                              },
-                                              child: const Text(
-                                                "Subscribe",
-                                                style: TextStyle(
+                                            child: ListTile(
+                                              title: Text(
+                                                _products[index].price,
+                                                style: const TextStyle(
                                                   color: Colors.white,
                                                 ),
                                               ),
-                                            ),
-                                          ))),
-                                ),
-                              ],
-                            ),
-                          )),
-                      itemCount: _products.length,
+                                              subtitle: Text(
+                                                _products[index].title,
+                                                style: const TextStyle(
+                                                  color: Colors.white,
+                                                ),
+                                              ),
+                                              trailing: OnClickAnimation(
+                                                onTap: () async {
+                                                  log('message :${_products[index].runtimeType}');
+                                                  setState(() {
+                                                    isRestore = false;
+                                                  });
+
+                                                  await iApEngine.inAppPurchase
+                                                      .restorePurchases()
+                                                      .whenComplete(() async {
+                                                    await Future.delayed(
+                                                            const Duration(
+                                                                seconds: 1))
+                                                        .then((value) async {
+                                                      if (subExisting &&
+                                                          oldPurchaseDetails
+                                                                  .productID !=
+                                                              _products[index]
+                                                                  .id) {
+                                                        await iApEngine
+                                                            .upgradeOrDowngradeSubscription(
+                                                                oldPurchaseDetails,
+                                                                _products[
+                                                                    index])
+                                                            .then((value) {
+                                                          setState(() {
+                                                            subExisting = false;
+                                                          });
+                                                        });
+                                                      } else {
+                                                        iApEngine
+                                                            .handlePurchase(
+                                                                _products[
+                                                                    index],
+                                                                _productsIds);
+                                                      }
+                                                    });
+                                                  });
+                                                },
+                                                child: const Text(
+                                                  "Subscribe",
+                                                  style: TextStyle(
+                                                    color: Colors.white,
+                                                  ),
+                                                ),
+                                              ),
+                                            ))),
+                                  ),
+                                ],
+                              ),
+                            )),
+                        itemCount: _products.length,
+                      ),
                     ),
                   ),
-                ),
-                const Padding(
-                  padding:
-                      EdgeInsets.symmetric(vertical: 25.0, horizontal: 25.0),
-                  child: Text(
-                    "The above ad will be removed if the user has subscribed to one of our subscrptions\n---------\nSubscritions automatically renews monthly until canceled.",
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      fontSize: 14,
-                      color: Colors.white,
+                  const Padding(
+                    padding:
+                        EdgeInsets.symmetric(vertical: 25.0, horizontal: 25.0),
+                    child: Text(
+                      "The above ad will be removed if the user has subscribed to one of our subscrptions\n---------\nSubscritions automatically renews monthly until canceled.",
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        fontSize: 14,
+                        color: Colors.white,
+                      ),
                     ),
-                  ),
-                )
-              ],
+                  )
+                ],
+              ),
             ),
           ),
-        ),
-      );
+        );
+      });
 }

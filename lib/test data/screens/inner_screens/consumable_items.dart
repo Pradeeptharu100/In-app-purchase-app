@@ -150,10 +150,10 @@ class _ConsumableItemsState extends State<ConsumableItems> {
                   children: [
                     OnClickAnimation(
                       onTap: () => {
-                        Navigator.of(context).pushAndRemoveUntil(
-                            MaterialPageRoute(
-                                builder: (context) => const MyHomePage()),
-                            (Route<dynamic> route) => false)
+                        // Navigator.of(context).pushAndRemoveUntil(
+                        //     MaterialPageRoute(
+                        //         builder: (context) => const MyHomePage()),
+                        //     (Route<dynamic> route) => false)
                       },
                       child: const Icon(
                         Icons.arrow_back,

@@ -1,5 +1,8 @@
 plugins {
     id "com.android.application"
+    // START: FlutterFire Configuration
+    id 'com.google.gms.google-services'
+    // END: FlutterFire Configuration
     id "kotlin-android"
     id "dev.flutter.flutter-gradle-plugin"
 }
@@ -55,10 +58,8 @@ android {
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName
         multiDexEnabled true
-        ndkVersion "23.1.7779620"
-        ndk {
-        debugSymbolLevel 'FULL'
-    }
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+       
 
     }
 
@@ -90,4 +91,9 @@ flutter {
 
 dependencies {
     implementation 'androidx.multidex:multidex:2.0.1'
+    implementation ('com.amazon.device:amazon-appstore-sdk:3.0.3') {
+        exclude group: 'com.amazon.device.iap.model', module: 'UserDataResponse$RequestStatus'
+    }
+   
+    
 }

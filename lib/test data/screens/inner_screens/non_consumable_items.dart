@@ -160,10 +160,12 @@ class _NonConsumableState extends State<NonConsumable> {
                     children: [
                       OnClickAnimation(
                         onTap: () => {
-                          Navigator.of(context).pushAndRemoveUntil(
-                              MaterialPageRoute(
-                                  builder: (context) => const MyHomePage()),
-                              (Route<dynamic> route) => false)
+                          // Navigator.of(context).pushAndRemoveUntil(
+                          //     MaterialPageRoute(
+                          //         builder: (context) => const MyHomePage()),
+                          //     (Route<dynamic> route) => false)
+
+                          // TODO
                         },
                         child: const Icon(
                           Icons.arrow_back,

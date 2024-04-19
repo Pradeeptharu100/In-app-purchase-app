@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:purchases_flutter/purchases_flutter.dart';
 import 'package:revenue_cat_in_app_purchase/components.dart';
-import 'package:revenue_cat_in_app_purchase/model/singltons_data.dart';
-import 'package:revenue_cat_in_app_purchase/model/styles.dart';
+import 'package:revenue_cat_in_app_purchase/revenue_cat/model/singltons_data.dart';
+import 'package:revenue_cat_in_app_purchase/revenue_cat/model/styles.dart';
 
 class Paywall extends StatefulWidget {
   final Offering offering;

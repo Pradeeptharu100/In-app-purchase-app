@@ -2,16 +2,15 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:in_app_purchase/in_app_purchase.dart';
 import 'package:modal_progress_hud_nsn/modal_progress_hud_nsn.dart';
 import 'package:purchases_flutter/purchases_flutter.dart';
 import 'package:revenue_cat_in_app_purchase/components.dart';
-import 'package:revenue_cat_in_app_purchase/components/native_dailog.dart';
-import 'package:revenue_cat_in_app_purchase/components/top_bar.dart';
-import 'package:revenue_cat_in_app_purchase/model/singltons_data.dart';
-import 'package:revenue_cat_in_app_purchase/model/styles.dart';
-import 'package:revenue_cat_in_app_purchase/model/weather_data.dart';
-import 'package:revenue_cat_in_app_purchase/views/paywall.dart';
+import 'package:revenue_cat_in_app_purchase/revenue_cat/components/native_dailog.dart';
+import 'package:revenue_cat_in_app_purchase/revenue_cat/components/top_bar.dart';
+import 'package:revenue_cat_in_app_purchase/revenue_cat/model/singltons_data.dart';
+import 'package:revenue_cat_in_app_purchase/revenue_cat/model/styles.dart';
+import 'package:revenue_cat_in_app_purchase/revenue_cat/model/weather_data.dart';
+import 'package:revenue_cat_in_app_purchase/revenue_cat/views/paywall.dart';
 
 class WeatherScreen extends StatefulWidget {
   const WeatherScreen({Key? key}) : super(key: key);

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'dart:math';
 
-import 'package:revenue_cat_in_app_purchase/model/styles.dart';
+import 'package:revenue_cat_in_app_purchase/revenue_cat/model/styles.dart';
 
 enum TemperatureUnit { f, c }
 

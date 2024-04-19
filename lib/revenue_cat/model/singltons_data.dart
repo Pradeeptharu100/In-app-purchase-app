@@ -1,4 +1,4 @@
-import 'package:revenue_cat_in_app_purchase/model/weather_data.dart';
+import 'package:revenue_cat_in_app_purchase/revenue_cat/model/weather_data.dart';
 
 class AppData {
   static final AppData _appData = AppData._internal();
